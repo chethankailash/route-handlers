@@ -82,19 +82,49 @@ app.post('/products',(req,res)=>{
 });
 
 app.put('/products/:id',(req,res)=>{
-	res.send({
-		msg:`put request made for /products/${req.params.id}`
+	// res.send({
+	// 	msg:`put request made for /products/${req.params.id}`
+	// })
+	let product=products.find((product)=>{
+		return product.id==req.params.id;
 	})
+
+	if(product){
+		product.price= req.body.price;
+		res.send({
+			product,
+			notice:'succefully updated the product'
+		})
+	}else{
+		res.send({
+			notice:`product with id ${req.params.id} is not found`
+		})
+	}
 
 })
 
 
 app.delete('/products/:id',(req,res)=>{
-	res.send({
-		msg:`delete request made for /products/${req.params.id}`
+	// res.send({
+	// 	msg:`delete request made for /products/${req.params.id}`
+	// })
+	let index = products.findIndex((product)=>{
+		return product.id == req.params.id;
 	})
 
+	if(index>=0){
+		products.splice(index,1);
+		res.send({
+			notice:`succefully deleted the product`
+		})
+	}
+	else{
+			res.send({
+				notice:`product with id ${req.params.id} not found`
+			})
+	}
 })
+
 
 app.listen(port,()=>{
 	console.log('listening on port ',port);
